@@ -14,10 +14,10 @@
 
     //CONFIG
     // MySQL connection setting
-    $conf['mysql']['host'] = 'localhost';
-    $conf['mysql']['user'] = 'root';
-    $conf['mysql']['pass'] = 'dev3633';
-    $conf['mysql']['dbname'] = 'mb_trunk';
+    $conf['mysql']['host'] = '';
+    $conf['mysql']['user'] = '';
+    $conf['mysql']['pass'] = '';
+    $conf['mysql']['dbname'] = '';
 
     //site config
     $conf['site']['domain'] = 'mb.trunk';
