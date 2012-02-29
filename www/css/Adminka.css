@@ -1,0 +1,166 @@
+body
+{
+  margin: 0px;
+  padding: 0px;
+}
+
+#wrapper
+{
+  padding: 12px;
+}
+
+#wrapper *
+{
+  font-family: Verdana;
+  font-size: 12px;
+}
+
+#mainContainer, #footer
+{
+  border: 4px solid #335;
+  min-height: 600px;
+  min-width: 800px;
+}
+
+#mainMenu, #footer
+{
+  background-color: #335;
+  height: 30px;
+  color: #fff;
+  padding-left: 12px;
+}
+
+#mainMenu .menuItem
+{
+  float: left;
+}
+
+#mainMenu .menuSelectedItem
+{
+  background-color: #668;
+  float: left;
+}
+
+#contextMenu
+{
+  background-color: #668;
+  height: 30px;
+  color: #fff;
+  padding-left: 12px;
+}
+
+#contextMenu .menuItem
+{
+  float: left;
+}
+
+#contextMenu .menuSelectedItem
+{
+  background-color: #fff;
+  color: #000;
+  float: left;
+}
+
+.menuItem, #logo
+{
+  padding: 2px 12px 2px 12px;
+  margin-top: 4px;
+  height: 16px;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 16px;
+}
+
+.menuSelectedItem
+{
+  text-decoration: underline;
+  border-radius: 4px;
+  position: relative;
+  top: 4px;
+  height: 22px;
+}
+
+#actionTitle
+{
+  background-color: #fff;
+  height: 24px;
+  border-bottom: 4px solid #335;
+  color: #000;
+  padding: 0px 12px 0px 12px;
+  vertical-align: middle;
+  line-height: 24px;
+}
+
+#logo, #copyright
+{
+  float: right;
+  font-weight: bolder;
+  font-size: 12px;
+}
+
+#appName
+{
+  color: #bfb;
+  font-size: 18px;
+  font-family: Helvetica;
+}
+
+#footer
+{
+  height: 20px;
+  min-height: 20px;
+  line-height: 16px;
+  margin-top: 0px;
+  padding: 0px;
+}
+
+#copyright
+{
+  padding-right: 12px;
+}
+
+#actionContainer
+{
+  padding: 12px;
+}
+
+/*************************** tables ************/
+table.main
+{
+  width: 100%;
+}
+
+table.main thead td
+{
+  padding: 2px 4px 2px 4px;
+  text-align: center;
+  background-color: #336;
+  color: #fff;
+  font-weight: bolder;
+}
+
+table.main tbody td
+{
+  padding: 2px 4px 2px 4px;
+  text-align: center;
+
+  color: #000;
+}
+
+table.main, table.main td
+{
+  border-collapse: collapse;
+  border: 1px solid #669;
+}
+
+table.main tbody tr:nth-child(2n)
+{
+  background-color: #f0f0ff;
+}
+
+table.main tbody tr:nth-child(2n-1)
+{
+  background-color: #f7f7ff;
+}
+
+/***********************************************/
