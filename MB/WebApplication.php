@@ -23,8 +23,6 @@
       parent::__construct( $paramsArray );
     }
 
-
-
     public function execute()
     {
       $this->log( __( 'Web приложение запущено' ) );
