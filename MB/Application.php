@@ -8,6 +8,9 @@
 
     public function __construct( $params = Array() )
     {
+      //reset autoloader
+      spl_autoload_register( Array( $this, 'loader' ) );
+
       //Load main config
       $conf = Array();
       require "../conf/main.conf.php";
@@ -21,6 +24,19 @@
       for( $i = 0; $i < $cnt; $i++ )
       {
         $this->params[$params[$i]] = isset( $params[$i + 1] ) ? $params[$i + 1] : '';
+      }
+    }
+
+    private function loader( $className )
+    {
+      $path = '../' . str_replace( '\\', '/', $className ) . '.php';
+      if( file_exists( $path ) )
+      {
+        require_once $path;
+      }
+      else
+      {
+        $this->error();
       }
     }
 

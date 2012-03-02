@@ -4,14 +4,13 @@
   ini_set( 'display_errors', 1 );
   ini_set( 'html_errors', 'On' );
 
-  define( 'APPLICATION_NAME', 'Adminka' );
+  define( 'MB_APPLICATION_NAME', 'Adminka' );
 
   require_once "../sys.php";
 
   final class Adminka extends MB\WebApplication
   {
     protected $bricksMap = Array(
-
       '*:/^.*$/' => 'Users:Adminka:Adminka',
       '*:/^.*$/' => 'Error:Adminka'
     );

@@ -17,7 +17,7 @@
      */
     private $action;
 
-    public function __construct()
+    final public function __construct()
     {
       $paramsArray = explode( '/', $_SERVER['REQUEST_URI'] );
       parent::__construct( $paramsArray );

@@ -11,7 +11,7 @@
         !Registry::set( 'Diagnostics', 'beginTime', microtime( true ) );
       }
 
-      Registry::addItem( 'Diagnostics', 'log', Array(
+      Registry::set( 'Diagnostics', 'log', Array(
         'time'    => sprintf( '%07.1fms', ( ( ( microtime( true ) - Registry::get( 'Diagnostics', 'beginTime' ) ) * 10000 ) / 10 ) ),
         'message' => $text
       ) );
@@ -28,6 +28,7 @@
         }
       }
     }
+
   }
 
 

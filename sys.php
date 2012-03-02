@@ -2,16 +2,7 @@
 
     function __autoload( $className )
     {
-      $nameArr = explode( '\\', $className );
-      $path = "../" . implode( '/', $nameArr ) . ".php";
-      if( file_exists( $path ) )
-      {
-        require_once $path;
-      }
-      else
-      {
-
-      }
+      require_once '../' . str_replace( '\\', '/', $className ) . '.php';
     }
 
     function __( $str )
