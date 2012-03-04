@@ -2,115 +2,103 @@
 
   namespace MB;
 
+  /**
+   *
+   */
   abstract class WebApplication extends Application
   {
-    protected $name = '';
-    protected $map = Array();
+    /**
+     * @var string
+     */
+    private $schema = '';
 
     /**
-     * @var Brick
+     * @var string
      */
-    private $brick;
+    private $subDomain = '';
 
     /**
-     * @var Action
+     *
      */
-    private $action;
-
     final public function __construct()
     {
-      $paramsArray = explode( '/', $_SERVER['REQUEST_URI'] );
-      parent::__construct( $paramsArray );
+      parent::__construct( explode( '/', $_SERVER['REQUEST_URI'] ) );
     }
 
+    /**
+     *
+     */
     public function execute()
     {
-      $this->log( __( 'Web приложение запущено' ) );
-      echo $this->main();
-      $this->log( __( 'Web приложение выполнено' ) );
+      $this->log( "Web application \"{$this->name}\" started" );
+      $this->main();
+      $this->log( "Web application \"{$this->name}\" executed" );
 
-      $this->showLog();
-    }
-
-    protected function showLog()
-    {
-      if( $this->logEnabled )
-      {
-        echo '<hr />';
-        $log = Registry::get( 'log' );
-        foreach( $log AS $item )
-        {
-          echo $item['time'] . ': ' . $item['message'] . '<br />';
-        }
-      }
+      $this->showLog( true );
     }
 
     public function main()
     {
+      //todo: start Session
 
-      if( !Session::load() )
-      {
-        //todo
-      }
+      $this->subDomain = $this->getSubdomain();
 
-      $isAuth = Session::isAuth() ? 'auth' : 'guest';
+      //scan map
+      $schema = '';
       $brickName = '';
-      $brickClassName = '';
-      $chm = '';
-      $appName = 'MB';
-      foreach( $this->map AS $mask => $bricks )
+
+      $subDomainKey = $this->getSubdomainKey();
+      $authState = 'auth';  //todo: get from Session state
+      foreach( $this->map[$subDomainKey] AS $mask => $alias )
       {
-        $maskArr = explode( ':', $mask, 2 );
-        if( $maskArr[0] == $isAuth OR $maskArr[0] = '*' )
+        $maskParts = explode( ':', $mask, 2 );
+        if( $maskParts[0] == $authState OR $maskParts[0] = '*' )
         {
-          if( preg_match( $maskArr[1], $_SERVER['REQUEST_URI'] ) )
+          if( preg_match( $maskParts[1], $_SERVER['REQUEST_URI'] ) )
           {
-            $bricksArr = explode( ':', $bricks, 3 );
-            if( !empty( $bricksArr[2] ) )
-            {
-              $appName = $bricksArr[2];
-            }
-            $brickName = ucfirst( $bricksArr[0] );
-            $brickClassName = "\\{$appName}\\bricks\\{$brickName}";
-            $chm = $bricksArr[1];
+            $aliasParts = explode( ':', $alias, 2 );
+            $schema = !empty( $aliasParts[1] ) ? $aliasParts[1] : $this->name;
+            $brickName = $aliasParts[0];
             break;
           }
         }
       }
 
-      if( empty( $brickName ) )
+      //get brick
+      $this->brick = $this->getBrick( $this->name, $brickName );
+      if( !is_object( $this->brick ) )
       {
-        $this->error( __( "Неизвестный кирпич" ) );
-      }
-      elseif( empty( $chm ) )
-      {
-        $this->error( __( "Ошибка мэппинга" ) );
+        $this->brick = $this->getBrick( 'MB', $brickName );
+        if( !is_object( $this->brick ) )
+        {
+          $this->error( 'brick' );//todo: set text or error type
+        }
       }
 
-      $this->brick = new $brickClassName();
       $actionName = $this->brick->getActionName();
 
-      if( empty( $actionName ) )
+      //get action
+      $this->action = $this->getAction( $this->name, $brickName, $actionName );
+      if( !is_object( $this->action ) )
       {
-        return $this->makeError( $chm );
+        $this->brick = $this->getAction( 'MB', $brickName, $actionName );
+        if( !is_object( $this->action ) )
+        {
+          $this->error( 'action' );//todo: set text or error type
+        }
       }
-
-      $actionClassName = "\\{$appName}\\bricks\\{$brickName}\\actions\\{$actionName}";
-      $this->action = new $actionClassName();
 
       if( !$this->action->applyFilters() )
       {
-        return $this->makeError( $chm );
+        return $this->error( 'filter' );//todo: set text or error type
       }
-
-      $this->action->loadBrick( $this->brick );
 
       // do ASYNC
       if( !empty( $_SERVER['REQUEST_METHOD'] ) AND !empty( $_SERVER['HTTP_X_REQUESTED_WITH'] ) AND
         $_SERVER['REQUEST_METHOD'] == 'POST' AND $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest'
       )
       {
-        //todo
+        //todo: async processing
       }
 
       // do POST
@@ -118,33 +106,68 @@
       {
         if( !$this->action->post() )
         {
-          //todo
+          //todo: post processing
         }
       }
 
       // do GET
-      //todo
-      $actionBody = $this->action->get();
-
-      if( file_exists( "../{$this->name}/chm/{$chm}.php" ) )
-      {
-        require "../{$this->name}/chm/{$chm}.php";
-      }
-      elseif( file_exists( "../MB/chm/{$chm}.php" ) )
-      {
-        require "../MB/chm/{$chm}.php";
-      }
-      else
-      {
-        $this->makeError( "Error" );
-      }
+      $this->drawSchema( $this->action->get() );
     }
 
-    protected function makeError( $chm, $text = '' )
+    /**
+     * @return string
+     */
+    private function getSubdomain()
     {
-      $action = new \MB\bricks\Errors\actions\Show();
-      $actionBody = $action->get( $text );
-      require "../chm/{$chm}.php";
+      $subdomain = substr( $_SERVER['HTTP_HOST'], 0, strrpos( $_SERVER['HTTP_HOST'], Config::get( $this->name, 'domain' ) ) );
+
+      if( strpos( $subdomain, 'www.' ) === 0 )
+      {
+        $subdomain = substr( $subdomain, 4 );
+      }
+      else if( $subdomain == 'www' )
+      {
+        $subdomain == '';
+      }
+
+      return $subdomain;
     }
+
+    /**
+     * @return string
+     */
+    private function getSubdomainKey()
+    {
+      $subDomainKey = 'root';
+      if( !empty( $this->subDomain ) )
+      {
+        if( isset( $this->map[$this->subDomain] ) )
+        {
+          $subDomainKey = $this->subDomain;
+        }
+        else
+        {
+          $subDomainKey = '*';
+        }
+      }
+
+      return $subDomainKey;
+    }
+
+    /**
+     * @param $actionContent
+     */
+    private function drawSchema( $actionContent )
+    {
+
+    }
+
+    protected function error( $text = '' )
+    {
+      //todo error processing
+      $this->showLog( DIAGNOSTICS_LOG_MODE_HTML );
+      return parent::error( $text );
+    }
+
   }
 

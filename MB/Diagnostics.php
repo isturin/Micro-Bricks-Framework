@@ -2,8 +2,15 @@
 
   namespace MB;
 
+  /**
+   *
+   */
   class Diagnostics
   {
+    /**
+     * @static
+     *
+     */
     static public function begin()
     {
       if( !Registry::exist( 'Diagnostics', 'beginTime' ) )
@@ -12,22 +19,43 @@
       }
     }
 
-    final public function log( $text )
+    /**
+     * @param string $text
+     * @param bool $isImportantly
+     */
+    final public function log( $text, $isImportantly = false )
     {
-      Registry::set( 'Diagnostics', 'log', Array(
-        'time'    => sprintf( '%07.1fms', ( ( ( microtime( true ) - Registry::get( 'Diagnostics', 'beginTime' ) ) * 10000 ) / 10 ) ),
-        'message' => $text
+      Registry::addItemToArray( 'Diagnostics', 'log', Array(
+        'time'          => sprintf( '%07.1fms', ( ( ( microtime( true ) - Registry::get( 'Diagnostics', 'beginTime' ) ) * 10000 ) / 10 ) ),
+        'message'       => $text,
+        'isImportantly' => $isImportantly
       ) );
     }
 
-    protected function showLog( $html = false )
+    /**
+     * @param int $logMode
+     */
+    protected function showLog( $logMode = DIAGNOSTICS_LOG_MODE_TEXT )
     {
       $log = Registry::get( 'Diagnostics', 'log' );
       if( !empty( $log ) AND is_array( $log ) )
       {
-        foreach( $log AS $item )
+        if( $logMode == DIAGNOSTICS_LOG_MODE_HTML )
         {
-          fwrite( STDOUT, "\n" . $item['time'] . ': ' . $item['message'] );
+          echo '<hr />';
+          foreach( $log AS $item )
+          {
+            echo $item['time'] . ': ' .
+                 '<span ' . ( !empty( $item['isImportantly'] ) ? 'style="color: red; font-weight: bolder; background-color: yellow;"' : '' ) .
+                 '>' .  $item['message'] . '</span><br />';
+          }
+        }
+        else
+        {
+          foreach( $log AS $item )
+          {
+            fwrite( STDOUT, "\n" . $item['time'] . ': ' . $item['message'] );
+          }
         }
       }
     }
