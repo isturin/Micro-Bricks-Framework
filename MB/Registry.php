@@ -16,7 +16,17 @@
 
     public static function exist()
     {
-      return !!self::get( func_get_args() );
+      $arglist = func_get_args();
+      $target = &self::$data;
+      while( $current = array_shift( $arglist ) )
+      {
+        if( !isset( $target[$current] ) )
+        {
+          return null;
+        }
+        $target = &$target[$current];
+      }
+      return !!$target;
     }
 
     public static function get()

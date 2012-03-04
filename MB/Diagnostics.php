@@ -4,13 +4,16 @@
 
   class Diagnostics
   {
-    final public function log( $text )
+    static public function begin()
     {
       if( !Registry::exist( 'Diagnostics', 'beginTime' ) )
       {
-        !Registry::set( 'Diagnostics', 'beginTime', microtime( true ) );
+        Registry::set( 'Diagnostics', 'beginTime', microtime( true ) );
       }
+    }
 
+    final public function log( $text )
+    {
       Registry::set( 'Diagnostics', 'log', Array(
         'time'    => sprintf( '%07.1fms', ( ( ( microtime( true ) - Registry::get( 'Diagnostics', 'beginTime' ) ) * 10000 ) / 10 ) ),
         'message' => $text
