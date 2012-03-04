@@ -61,11 +61,12 @@
       $path = '../' . str_replace( '\\', '/', $className ) . '.php';
       if( file_exists( $path ) )
       {
+        //$this->log( "require_once {$path};" );
         require_once $path;
       }
       else
       {
-        $this->error( 'loader: ' . $className );
+        $this->error( "require_once {$path};" );
       }
     }
 
