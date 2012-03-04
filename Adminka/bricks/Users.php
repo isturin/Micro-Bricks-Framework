@@ -4,16 +4,17 @@
 
   class Users extends \MB\Brick
   {
-    public function setMap()
-    {
-      $this->map = Array(
-        '/^.*$/' => 'Manage'
-      );
-    }
+    protected $map = Array(
+      '/^.*$/' => 'Manage'
+    );
 
-    public function setActions()
-    {
-      $this->setAction( 'manage', 'users', __( "Управление" ), __( "Управление пользователями" ) );
-    }
+    protected $actions = Array(
+      'manage' => Array(
+        'template' => 'users',
+        'label' => 'Manage',
+        'title' => 'User management'
+      )
+    );
+
   }
 

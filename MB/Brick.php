@@ -15,28 +15,12 @@
     /**
      * @var array
      */
-    private $actions = Array();
+    protected $actions = Array();
 
     /**
-     *
+     * @var array
      */
-    final public function __construct()
-    {
-      $this->setMap();
-      $this->setActions();
-    }
-
-    /**
-     * @abstract
-     *
-     */
-    abstract protected function setMap();
-
-    /**
-     * @abstract
-     *
-     */
-    abstract protected function setActions();
+    protected $scripts = Array();
 
     /**
      * @return string
@@ -49,7 +33,7 @@
       {
         if( preg_match( $mask, $_SERVER['REQUEST_URI'] ) )
         {
-          $actionName = ucfirst( $tmpActionName );
+          $actionName = $tmpActionName;
           break;
         }
       }
