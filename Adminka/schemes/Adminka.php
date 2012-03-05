@@ -24,7 +24,7 @@
           <br clear="left"/>
         </div>
         <div id="actionTitle">
-          Пользователи :: Управление :: Список
+          <?//todo:title ?>
         </div>
         <div id="actionContainer">
           <?=$actionContent?>
