@@ -44,7 +44,7 @@
       $this->subDomain = $this->getSubdomain();
 
       //scan map
-      $schema = '';
+      $scheme = '';
       $brickName = '';
 
       $subDomainKey = $this->getSubdomainKey();
@@ -57,7 +57,7 @@
           if( preg_match( $maskParts[1], $_SERVER['REQUEST_URI'] ) )
           {
             $aliasParts = explode( ':', $alias, 2 );
-            $schema = !empty( $aliasParts[1] ) ? $aliasParts[1] : $this->name;
+            $scheme = !empty( $aliasParts[1] ) ? $aliasParts[1] : $this->name;
             $brickName = $aliasParts[0];
             break;
           }
@@ -111,7 +111,7 @@
       }
 
       // do GET
-      $this->drawSchema( $this->action->get() );
+      $this->drawSchema( $scheme, $this->action->get() );
     }
 
     /**
@@ -155,11 +155,28 @@
     }
 
     /**
+     * @param $scheme
      * @param $actionContent
      */
-    private function drawSchema( $actionContent )
+    private function drawSchema( $scheme, $actionContent )
     {
-
+      $path = "../{$this->name}/schemes/{$scheme}.php";
+      if( file_exists( $path ) )
+      {
+        require $path;
+      }
+      else
+      {
+        $path = "../MB/schemes/{$scheme}.php";
+        if( file_exists( $path ) )
+        {
+          require $path;
+        }
+        else
+        {
+          $this->error( 'scheme' );
+        }
+      }
     }
 
     protected function error( $text = '' )
