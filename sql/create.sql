@@ -1,3 +1,5 @@
+/* Version 1.0 prealpha */
+
 #04/12/2011 Maxim
 
 CREATE TABLE mb_cache (

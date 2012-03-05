@@ -27,7 +27,7 @@
           Пользователи :: Управление :: Список
         </div>
         <div id="actionContainer">
-          <?=$actionBody?>
+          <?=$actionContent?>
         </div>
       </div>
       <div id="footer">

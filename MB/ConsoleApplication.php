@@ -6,10 +6,10 @@
   {
     protected $argv = Array();
 
-    public function __construct( $params )
+    final public function __construct( $params )
     {
-      parent::__construct( $params );
       $this->argv = $params;
+      parent::__construct( $params );
     }
 
     protected function getFixedParam( $position )

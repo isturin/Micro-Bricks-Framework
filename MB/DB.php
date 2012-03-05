@@ -13,12 +13,12 @@
     {
       if( self::$instance === null )
       {
-        self::$instance = mysql_connect( Registry::get( 'conf', 'mysql', 'host' ),
-          Registry::get( 'conf', 'mysql', 'user' ), Registry::get( 'conf', 'mysql', 'pass' ) );
+        self::$instance = mysql_connect( Config::get( 'mysql', 'host' ),
+                                         Config::get( 'mysql', 'user' ),  Config::get( 'mysql', 'pass' ) );
 
         if( self::$instance !== false )
         {
-          mysql_select_db( Registry::get( 'conf', 'mysql', 'dbname' ), self::$instance );
+          mysql_select_db(  Config::get( 'mysql', 'dbname' ), self::$instance );
           mysql_query( 'SET NAMES utf8', self::$instance );
         }
       }
