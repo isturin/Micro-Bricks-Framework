@@ -13,14 +13,9 @@
     {
       if( self::$instance === null )
       {
-        self::$instance = mysql_connect( Registry::get( 'conf', 'mysql', 'host' ),
-                                         Registry::get( 'conf', 'mysql', 'user' ), Registry::get( 'conf', 'mysql', 'pass' ) );
-
-        if( self::$instance !== false )
-        {
-          mysql_select_db( Registry::get( 'conf', 'mysql', 'dbname' ), self::$instance );
-          mysql_query( 'SET NAMES utf8', self::$instance );
-        }
+        self::$instance = new Redis();
+        self::$instance->connect( Config::get( 'redis', 'host' ), Config::get( 'redis', 'port' ) );
+        self::$instance->select( Config::get( 'redis', 'dbID' ) );
       }
 
       return self::$instance;
