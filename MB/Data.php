@@ -133,4 +133,14 @@
 
       return $status;
     }
+
+    final protected function kvGet()
+    {
+
+    }
+
+    final protected function kvSet()
+    {
+
+    }
   }

@@ -20,11 +20,13 @@
 
     public static function close()
     {
+      //todo: close session
       return true;
     }
 
     public static function destroy()
     {
+      //todo: destroy session
       return true;
     }
 
@@ -34,28 +36,15 @@
 
     public static function read( $sessionID )
     {
-      $data = '';
-      $uid = (int)self::getCookie( 'uid' );
-
-      if( $uid )
-      {
-        $keyName = 'sess:' . Registry::get( 'appname' ) . ':' . $uid;
-        $data = self::dbGetCache( $keyName );
-      }
+      $keyName = 'sess:' . $sessionID;
+      $data = self::kvGet( $keyName );
 
       return $data;
     }
 
-    public static function write( $id, $data, $uid = false, $appname = false, $isLongSession = false )
+    public static function write( $sessionID, $data )
     {
-      //$expire = $isLongSession ? $isLongSession : ( isset( $_SESSION['isLongSession'] ) ? Registry::get( 'conf', 'session', 'longTimeout' ) : Registry::get( 'conf', 'session', 'shortTimeout' ) );
-      $appname = $appname ? $appname : Registry::get( 'appname' );
-      $uid = $uid ? $uid : self::get( 'uid' );
-      if( $uid )
-      {
-        $keyName = "sess:{$appname}:{$uid}";
-        self::dbSetCache( $keyName, $data );
-      }
+      self::kvSet( "sess:{$sessionID}", $data );
 
       return true;
     }
@@ -64,10 +53,9 @@
     {
       if( !self::$sessionStarted )
       {
-        ini_set( 'session.save_handler', 'user' );
-        session_name( Registry::get( 'conf', Registry::get( 'appname' ), 'session_name' ) );
-        session_set_cookie_params( (int)Registry::get( 'conf', 'session', 'longTimeout' ), '/',
-          Registry::get( 'appname' ), 'session_name' );
+        //ini_set( 'session.save_handler', 'user' );
+        //session_name( Registry::get( 'conf', Registry::get( 'appname' ), 'session_name' ) );
+        //session_set_cookie_params( (int)Registry::get( 'conf', 'session', 'longTimeout' ), '/', Registry::get( 'appname' ), 'session_name' );
 
         session_write_close();
         session_set_save_handler( Array(
@@ -93,7 +81,6 @@
         session_start();
 
         $sid = self::get( 'sid' );
-        $uid = self::get( 'uid' );
 
         //todo
         if( !empty( $sid ) AND !empty( $uid ) )
