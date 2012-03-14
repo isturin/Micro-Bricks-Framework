@@ -2,7 +2,7 @@
 
   namespace MB;
 
-  class Field extends Diagnostics
+  class Field
   {
     private $field, $fieldName, $validators;
 

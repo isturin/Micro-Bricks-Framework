@@ -2,7 +2,7 @@
 
   namespace MB;
 
-  abstract class Widget extends Diagnostics
+  abstract class Widget
   {
     private $content = '';
     protected $path;

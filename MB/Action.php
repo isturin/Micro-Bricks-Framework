@@ -2,7 +2,7 @@
 
   namespace MB;
 
-  abstract class Action extends Diagnostics
+  abstract class Action
   {
     /**
      * @var Filter[]

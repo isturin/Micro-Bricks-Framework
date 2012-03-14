@@ -5,7 +5,7 @@
   /**
    *
    */
-  abstract class Application extends Diagnostics
+  abstract class Application
   {
     /**
      * @var string

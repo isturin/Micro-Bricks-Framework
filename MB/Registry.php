@@ -5,7 +5,7 @@
   /**
    *
    */
-  final class Registry extends Diagnostics
+  final class Registry
   {
     /**
      * @var array

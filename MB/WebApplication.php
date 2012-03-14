@@ -30,11 +30,11 @@
      */
     public function execute()
     {
-      $this->log( "Web application \"{$this->name}\" started" );
+      Diagnostics::log( "Web application \"{$this->name}\" started" );
       $this->main();
-      $this->log( "Web application \"{$this->name}\" executed" );
+      Diagnostics::log( "Web application \"{$this->name}\" executed" );
 
-      $this->showLog( true );
+      Diagnostics::showLog( DIAGNOSTICS_LOG_MODE_HTML );
     }
 
     public function main()
@@ -182,7 +182,7 @@
     protected function error( $text = '' )
     {
       //todo error processing
-      $this->showLog( DIAGNOSTICS_LOG_MODE_HTML );
+      Diagnostics::showLog( DIAGNOSTICS_LOG_MODE_HTML );
       return parent::error( $text );
     }
 

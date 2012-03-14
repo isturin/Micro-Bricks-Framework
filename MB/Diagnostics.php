@@ -5,7 +5,7 @@
   /**
    *
    */
-  class Diagnostics
+  final class Diagnostics
   {
     /**
      * @static
@@ -23,7 +23,7 @@
      * @param string $text
      * @param bool $isImportantly
      */
-    final public function log( $text, $isImportantly = false )
+    static public function log( $text, $isImportantly = false )
     {
       Registry::addItemToArray( 'Diagnostics', 'log', Array(
         'time'          => sprintf( '%07.1fms', ( ( ( microtime( true ) - Registry::get( 'Diagnostics', 'beginTime' ) ) * 10000 ) / 10 ) ),
@@ -35,7 +35,7 @@
     /**
      * @param int $logMode
      */
-    protected function showLog( $logMode = DIAGNOSTICS_LOG_MODE_TEXT )
+    static public function showLog( $logMode = DIAGNOSTICS_LOG_MODE_TEXT )
     {
       $log = Registry::get( 'Diagnostics', 'log' );
       if( !empty( $log ) AND is_array( $log ) )

@@ -5,7 +5,7 @@
   /**
    *
    */
-  final class Config extends Diagnostics
+  final class Config
   {
     /**
      * @var array
