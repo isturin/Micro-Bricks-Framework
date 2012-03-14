@@ -14,6 +14,12 @@
   define( 'DIAGNOSTICS_LOG_MODE_HTML', 1 );
   define( 'DIAGNOSTICS_LOG_MODE_TEXT', 2 );
 
+  //diagnostics log importantly
+  define( 'DIAGNOSTICS_LOG_IMPORTANTLY_NORMAL', 1 );
+  define( 'DIAGNOSTICS_LOG_IMPORTANTLY_NOTICE', 2 );
+  define( 'DIAGNOSTICS_LOG_IMPORTANTLY_WARNING', 3 );
+  define( 'DIAGNOSTICS_LOG_IMPORTANTLY_ERROR', 4 );
+
   //other
   define( 'CURRENT_TIMESTAMP', time() );
 
