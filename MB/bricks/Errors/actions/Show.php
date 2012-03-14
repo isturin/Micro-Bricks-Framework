@@ -3,4 +3,8 @@
   class Show extends \MB\Action
   {
 
+    public function setFilters(){
+
+    }
+
   }

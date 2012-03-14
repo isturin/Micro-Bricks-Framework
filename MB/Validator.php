@@ -2,7 +2,7 @@
 
   namespace MB;
 
-  abstract class Validator extends Diagnostics
+  abstract class Validator
   {
     protected $field, $test;
 

@@ -5,7 +5,7 @@
   /**
    *
    */
-  abstract class Brick extends Diagnostics
+  abstract class Brick
   {
     /**
      * @var array

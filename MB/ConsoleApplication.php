@@ -24,11 +24,11 @@
 
     public function execute()
     {
-      $this->log( __( 'Консольное приложение запущено' ) );
+      Diagnostics::log( __( 'Консольное приложение запущено' ) );
       $this->main();
-      $this->log( __( 'Консольное приложение выполнено' ) );
+      Diagnostics::log( __( 'Консольное приложение выполнено' ) );
 
-      $this->showLog();
+      Diagnostics::showLog();
     }
 
     abstract function main();

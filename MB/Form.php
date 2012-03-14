@@ -2,7 +2,7 @@
 
   namespace MB;
 
-  class Form extends Diagnostics
+  class Form
   {
     private $fields;
     protected function getPostInput( $name )

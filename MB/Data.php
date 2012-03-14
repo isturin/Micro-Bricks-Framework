@@ -2,7 +2,7 @@
 
   namespace MB;
 
-  class Data extends Diagnostics
+  class Data
   {
     final protected function dbQuery( $sql )
     {
@@ -10,9 +10,9 @@
       $res = mysql_query( $sql, DB::getInstance() );
       if( mysql_errno() != 0 )
       {
-        self::log( __( 'SQL Ошибка: ' ) . mysql_error() );
+        Diagnostics::log( __( 'SQL Ошибка: ' ) . mysql_error() );
       }
-      self::log( "SQL: {$sql} [" . sprintf( '%07.1fms', ( ( ( microtime( true ) - $startQueryTime ) * 10000 ) / 10 ) ) . ']' );
+      Diagnostics::log( "SQL: {$sql} [" . sprintf( '%07.1fms', ( ( ( microtime( true ) - $startQueryTime ) * 10000 ) / 10 ) ) . ']' );
       return $res;
     }
 
@@ -88,10 +88,10 @@
 
     final protected function dbLastInsertId()
     {
-      self::log( __( 'SQL: Получение последнего ID' ) );
+      Diagnostics::log( __( 'SQL: Получение последнего ID' ) );
       $startQueryTime = microtime( true );
       $ID = mysql_insert_id( DB::getInstance() );
-      self::log(
+      Diagnostics::log(
         'SQL: ' . sprintf( '%07.1fms', ( ( ( microtime( true ) - $startQueryTime ) * 10000 ) / 10 ) ) . 'ms' );
       return $ID;
     }

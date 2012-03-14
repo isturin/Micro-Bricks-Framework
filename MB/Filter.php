@@ -2,7 +2,7 @@
 
   namespace MB;
 
-  abstract class Filter extends Diagnostics
+  abstract class Filter
   {
     abstract public function apply();
   }
