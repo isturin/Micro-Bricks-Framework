@@ -2,138 +2,154 @@
 
   namespace MB;
 
-  final class Session extends Data
+  /**
+   *
+   */
+  final class Session
   {
-    protected static $sessionStarted = false;
+    /**
+     * @var bool
+     */
+    static private $isStarted;
 
+    /**
+     *
+     */
     private function __construct()
     {
     }
 
-    protected function __clone()
+    /**
+     *
+     */
+    private function __clone()
     {
     }
 
-    public static function open()
+    /**
+     * @static
+     * @return bool
+     */
+    static public function open()
     {
-    }
-
-    public static function close()
-    {
-      //todo: close session
       return true;
     }
 
-    public static function destroy()
+    /**
+     * @static
+     * @return bool
+     */
+    static public function close()
     {
-      //todo: destroy session
       return true;
     }
 
+    /**
+     * @static
+     * @return bool
+     */
+    static public function destroy()
+    {
+      //todo
+      return true;
+    }
+
+    /**
+     * @static
+     * @return bool
+     */
     public static function gc()
     {
-    }
-
-    public static function read( $sessionID )
-    {
-      $keyName = 'sess:' . $sessionID;
-      $data = self::kvGet( $keyName );
-
-      return $data;
-    }
-
-    public static function write( $sessionID, $data )
-    {
-      self::kvSet( "sess:{$sessionID}", $data );
-
+      //todo
       return true;
     }
 
-    public static function load()
+    /**
+     * @static
+     * @param string $sessionID
+     * @return array
+     */
+    public static function read( $sessionID )
     {
-      if( !self::$sessionStarted )
-      {
-        //ini_set( 'session.save_handler', 'user' );
-        //session_name( Registry::get( 'conf', Registry::get( 'appname' ), 'session_name' ) );
-        //session_set_cookie_params( (int)Registry::get( 'conf', 'session', 'longTimeout' ), '/', Registry::get( 'appname' ), 'session_name' );
+      return \MB\models\Session::read( $sessionID );
+    }
 
+    /**
+     * @static
+     * @param string $sessionID
+     * @param array $data
+     * @return bool
+     */
+    public static function write( $sessionID, $data )
+    {
+      return \MB\models\Session::write( $sessionID, $data );
+    }
+
+    /**
+     * @static
+     * @param string $sessionName
+     * @return bool
+     */
+    public static function load( \string $sessionName )
+    {
+      if( self::$isStarted === null )
+      {
+        session_name( $sessionName );
+        session_set_cookie_params( Registry::get( 'conf', 'session', 'longTimeout' ), '/', $sessionName, 'session_name' );
         session_write_close();
-        session_set_save_handler( Array(
-          '\MB\Session',
-          'open'
-        ), Array(
-          '\MB\Session',
-          'close'
-        ), Array(
-          '\MB\Session',
-          'read'
-        ), Array(
-          '\MB\Session',
-          'write'
-        ), Array(
-          '\MB\Session',
-          'destroy'
-        ), Array(
-          '\MB\Session',
-          'gc'
-        ) );
+        session_set_save_handler( Array( '\MB\Session', 'open' ),
+                                  Array( '\MB\Session', 'close'),
+                                  Array( '\MB\Session', 'read' ),
+                                  Array( '\MB\Session', 'write' ),
+                                  Array( '\MB\Session', 'destroy' ),
+                                  Array( '\MB\Session', 'gc' ) );
         register_shutdown_function( 'session_write_close' );
         session_start();
 
-        $sid = self::get( 'sid' );
-
-        //todo
-        if( !empty( $sid ) AND !empty( $uid ) )
+        $sessionID = self::get( 'sessionID' );
+        self::$isStarted = $sessionID == session_id();
+        if( !self::$isStarted )
         {
-          if( $sid == self::getId() )
-          {
-            self::set( 'lastTouch', time() );
-          }
-          else
-          {
-            self::logout();
-            //todo
-            return false;
-          }
+          self::logout();
         }
-
-        self::$sessionStarted = true;
       }
 
-      return $_SESSION;
+      return self::$isStarted;
     }
 
-    public function get( $key )
+    /**
+     * @static
+     * @param string $key
+     * @return null
+     */
+    static public function get( \string $key )
     {
-      return isset( $_SESSION[$key] ) ? $_SESSION[$key] : false;
+      return isset( $_SESSION[$key] ) ? $_SESSION[$key] : null;
     }
 
-    public function set( $key, $data = false )
+    /**
+     * @static
+     * @param string $key
+     * @param mixed $data
+     */
+    static public function set( \string $key, $data )
     {
-      if( is_array( $key ) )
-      {
-        $_SESSION = array_merge( $_SESSION, $key );
-      }
-      else
-      {
-        $_SESSION[$key] = $data;
-      }
+      $_SESSION[$key] = $data;
     }
 
-    public function remove( $key )
+    /**
+     * @static
+     * @param string $key
+     */
+    static public function remove( \string $key )
     {
-      if( $key and isset( $_SESSION[$key] ) )
+      if( isset( $_SESSION[$key] ) )
       {
         unset( $_SESSION[$key] );
       }
     }
-
-    public function getId()
-    {
-      return session_id();
-    }
-
-    public static function del( $uid = false, $appname = false )
+         /*
+    static public function del( $uid = false, $appname = false )
     {
       if( !$uid )
       {
@@ -147,30 +163,38 @@
         $keyName = "sess:{$appname}:{$uid}";
         self::dbSetCache( $keyName, '' );
       }
-    }
-
+    }*/
+      /*
     public static function checkUserSession( $uid, $appname )
     {
       return !!self::dbGetCache( "sess:{$appname}:{$uid}" );
     }
+     */
 
+    /*
     public static function setCookie( $name, $value, $expire )
     {
       return setcookie( Registry::get( 'appname' ) . $name, $value, $expire, INI_GET( 'session.cookie_path' ),
-        INI_GET( 'session.cookie_domain' ) );
+                        INI_GET( 'session.cookie_domain' ) );
     }
+    */
 
+    /*
     public static function getCookie( $name )
     {
       $key = Registry::get( 'appname' ) . $name;
       return isset( $_COOKIE[$key] ) ? $_COOKIE[$key] : false;
     }
+    */
 
+    /*
     public static function getUserSession( $uid, $appname )
     {
       return self::decode( self::dbGetCache( "sess:{$appname}:{$uid}" ) );
     }
+    */
 
+    /*
     public static function setUserSession( $uid, $appname, $data )
     {
       $userData = self::getUserSession( $uid, $appname );
@@ -183,28 +207,34 @@
         self::write( false, self::encode( $userData ), $uid, $appname, $data['isLongSession'] );
       }
     }
+    */
 
+    /*
     public static function isAuth()
     {
       return self::get( 'uid' ) AND self::get( 'sid' ) AND self::get( 'sid' ) == self::getId();
     }
+    */
 
+    /*
     private static function encode( $array )
     {
       return serialize( $array );
     }
+    */
 
+    /*
     private static function decode( $data )
     {
       return unserialize( $data );
     }
+    */
 
     public static function logout()
     {
-      $uid = self::get( 'uid' );
-      self::del();
-      self::setCookie( 'uid', $uid, time() - 3600 );
-      Registry::set( 'isAuth', false );
+      //todo
+      //self::del();
+      //self::setCookie( 'uid', $uid, time() - 3600 );
     }
   }
 
