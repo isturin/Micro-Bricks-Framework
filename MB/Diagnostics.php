@@ -21,9 +21,9 @@
 
     /**
      * @param string $text
-     * @param bool $isImportantly
+     * @param int $importantly
      */
-    static public function log( $text, $isImportantly = false )
+    static public function log( $text, $importantly = DIAGNOSTICS_LOG_IMPORTANTLY_NORMAL )
     {
       $beginTime = Registry::get( 'Diagnostics', 'beginTime' );
       if( $beginTime === null )
@@ -35,7 +35,7 @@
       Registry::addItemToArray( 'Diagnostics', 'log', Array(
         'time'          => sprintf( '%07.1fms', ( ( ( microtime( true ) - $beginTime ) * 10000 ) / 10 ) ),
         'message'       => $text,
-        'isImportantly' => $isImportantly
+        'isImportantly' => $importantly
       ) );
     }
 
@@ -47,22 +47,41 @@
       $log = Registry::get( 'Diagnostics', 'log' );
       if( !empty( $log ) AND is_array( $log ) )
       {
-        if( $logMode == DIAGNOSTICS_LOG_MODE_HTML )
+        switch ( $logMode )
         {
-          echo '<hr />';
-          foreach( $log AS $item )
-          {
-            echo $item['time'] . ': ' .
-                 '<span ' . ( !empty( $item['isImportantly'] ) ? 'style="color: red; font-weight: bolder; background-color: yellow;"' : '' ) .
-                 '>' .  $item['message'] . '</span><br />';
-          }
-        }
-        else
-        {
-          foreach( $log AS $item )
-          {
-            fwrite( STDOUT, "\n" . $item['time'] . ': ' . $item['message'] );
-          }
+          case DIAGNOSTICS_LOG_MODE_HTML:
+            echo '<hr />';
+            foreach( $log AS $item )
+            {
+              switch ( $item['isImportantly'] )
+              {
+                case DIAGNOSTICS_LOG_IMPORTANTLY_ERROR:
+                  echo  "{$item['time']}: <span style=\"color: red; font-weight: bolder; background-color: yellow;\">{$item['message']}</span><br />";
+                  break;
+
+                case DIAGNOSTICS_LOG_IMPORTANTLY_WARNING:
+                  echo  "{$item['time']}: <span style=\"color: orange; font-weight: bolder; background-color: yellow;\">{$item['message']}</span><br />";
+                  break;
+
+                case DIAGNOSTICS_LOG_IMPORTANTLY_NOTICE:
+                  echo  "{$item['time']}: <span style=\"font-weight: bolder;\">{$item['message']}</span><br />";
+                  break;
+
+                case DIAGNOSTICS_LOG_IMPORTANTLY_NORMAL:
+                default:
+                  echo  "{$item['time']}: <span>{$item['message']}</span><br />";
+                  break;
+              }
+            }
+            break;
+
+          case DIAGNOSTICS_LOG_MODE_TEXT:
+          default:
+            foreach( $log AS $item )
+            {
+              fwrite( STDOUT, "\n" . $item['time'] . ': ' . $item['message'] );
+            }
+            break;
         }
       }
     }
