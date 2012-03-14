@@ -25,8 +25,15 @@
      */
     static public function log( $text, $isImportantly = false )
     {
+      $beginTime = Registry::get( 'Diagnostics', 'beginTime' );
+      if( $beginTime === null )
+      {
+        $beginTime = microtime( true );
+        Registry::set( 'Diagnostics', 'beginTime', $beginTime );
+      }
+
       Registry::addItemToArray( 'Diagnostics', 'log', Array(
-        'time'          => sprintf( '%07.1fms', ( ( ( microtime( true ) - Registry::get( 'Diagnostics', 'beginTime' ) ) * 10000 ) / 10 ) ),
+        'time'          => sprintf( '%07.1fms', ( ( ( microtime( true ) - $beginTime ) * 10000 ) / 10 ) ),
         'message'       => $text,
         'isImportantly' => $isImportantly
       ) );
