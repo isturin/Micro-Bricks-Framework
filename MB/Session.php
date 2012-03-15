@@ -46,12 +46,12 @@
 
     /**
      * @static
-     * @return bool
+     * @param $sessionID
+     * @return bool array
      */
-    static public function destroy()
+    static public function destroy( $sessionID )
     {
-      //todo
-      return true;
+      return \MB\models\Session::destroy( $sessionID );
     }
 
     /**
@@ -148,28 +148,6 @@
         unset( $_SESSION[$key] );
       }
     }
-         /*
-    static public function del( $uid = false, $appname = false )
-    {
-      if( !$uid )
-      {
-        session_unset();
-        $_SESSION = Array();
-      }
-
-      $uid = !$uid ? self::get( 'uid' ) : $uid;
-      if( $uid > 0 )
-      {
-        $keyName = "sess:{$appname}:{$uid}";
-        self::dbSetCache( $keyName, '' );
-      }
-    }*/
-      /*
-    public static function checkUserSession( $uid, $appname )
-    {
-      return !!self::dbGetCache( "sess:{$appname}:{$uid}" );
-    }
-     */
 
     /*
     public static function setCookie( $name, $value, $expire )
@@ -187,54 +165,9 @@
     }
     */
 
-    /*
-    public static function getUserSession( $uid, $appname )
-    {
-      return self::decode( self::dbGetCache( "sess:{$appname}:{$uid}" ) );
-    }
-    */
-
-    /*
-    public static function setUserSession( $uid, $appname, $data )
-    {
-      $userData = self::getUserSession( $uid, $appname );
-      if( $userData )
-      {
-        unset( $data['sid'] );
-        unset( $data['lastTouch'] );
-        unset( $data['lastLog'] );
-        $userData = array_merge( $userData, $data );
-        self::write( false, self::encode( $userData ), $uid, $appname, $data['isLongSession'] );
-      }
-    }
-    */
-
-    /*
-    public static function isAuth()
-    {
-      return self::get( 'uid' ) AND self::get( 'sid' ) AND self::get( 'sid' ) == self::getId();
-    }
-    */
-
-    /*
-    private static function encode( $array )
-    {
-      return serialize( $array );
-    }
-    */
-
-    /*
-    private static function decode( $data )
-    {
-      return unserialize( $data );
-    }
-    */
-
     public static function logout()
     {
-      //todo
-      //self::del();
-      //self::setCookie( 'uid', $uid, time() - 3600 );
+      session_destroy();
     }
   }
 

@@ -29,4 +29,15 @@
       //todo
       return true;
     }
+
+    /**
+     * @static
+     * @param string $sessionID
+     * @return bool
+     */
+    static public function destroy( \string $sessionID )
+    {
+      //todo
+      return true;
+    }
   }
