@@ -3,9 +3,9 @@
   namespace MB;
 
   /**
-   * Class KV. Singlton
+   *
    */
-  final class KV
+  final class RedisConnection
   {
     static private $instance;
 
