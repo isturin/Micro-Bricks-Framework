@@ -74,7 +74,9 @@ body
 .menuSelectedItem
 {
   text-decoration: underline;
-  border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;  
+  border-radius: 4px; 
   position: relative;
   top: 4px;
   height: 22px;
