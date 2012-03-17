@@ -2,15 +2,36 @@
 
   namespace MB;
 
+  /**
+   *
+   */
   class Field
   {
-    private $field, $fieldName, $validators;
+    /**
+     * @var array
+     */
+    private $validators;
 
-    public function __construct( $field, $fieldName, $validators )
+    /**
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @var string
+     */
+    private $label;
+
+    /**
+     * @param string $name
+     * @param string $label
+     * @param array $validators
+     */
+    public function __construct( \string $name, \string $label, array $validators = Array() )
     {
-      $this->field = $field;
-      $this->fieldName = $fieldName;
-      $this->validators = $validators;
+      $this->name = $name;
+      $this->label = $label;
+      $this->$validators = $validators;
     }
 
 
