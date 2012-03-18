@@ -1,8 +1,11 @@
 <?php
 
   error_reporting( E_ALL );
+
+  //ini sets
   ini_set( 'display_errors', 1 );
   ini_set( 'html_errors', 'On' );
+  ini_set( 'session.save_handler', 'user' );
 
   //DEFINES
   //application mode

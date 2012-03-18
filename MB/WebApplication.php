@@ -40,6 +40,7 @@
     public function main()
     {
       //todo: start Session
+      //Registry::get( 'conf', Registry::get( 'appname' ), 'session_name' )
 
       $this->subDomain = $this->getSubdomain();
 

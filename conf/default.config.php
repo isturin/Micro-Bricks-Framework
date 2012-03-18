@@ -8,6 +8,11 @@
   $config['mysql']['pass'] = '';
   $config['mysql']['dbname'] = '';
 
+  // Redis
+  $config['redis']['host'] = '';
+  $config['redis']['port'] = '';
+  $config['redis']['dbID'] = '';
+
   //Adminka config
   $appName = 'Adminka';
 

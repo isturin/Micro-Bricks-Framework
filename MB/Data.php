@@ -6,13 +6,16 @@
   {
     final protected function dbQuery( $sql )
     {
+      $link = MySQLConnection::getInstance();
+
       $startQueryTime = microtime( true );
-      $res = mysql_query( $sql, DB::getInstance() );
-      if( mysql_errno() != 0 )
-      {
-        Diagnostics::log( __( 'SQL Ошибка: ' ) . mysql_error() );
-      }
+      $res = mysqli_query( $link, $sql );
       Diagnostics::log( "SQL: {$sql} [" . sprintf( '%07.1fms', ( ( ( microtime( true ) - $startQueryTime ) * 10000 ) / 10 ) ) . ']' );
+      if( mysqli_errno( $link ) != 0 )
+      {
+        Diagnostics::log( "SQL: " . mysqli_error( $link ), DIAGNOSTICS_LOG_IMPORTANTLY_ERROR );
+      }
+
       return $res;
     }
 
@@ -38,12 +41,12 @@
       $items = Array();
       if( $res )
       {
-        $numItems = mysql_num_rows( $res );
+        $numItems = mysqli_num_rows( $res );
         for( $i = 0; $i < $numItems; $i++ )
         {
-          $items[] = mysql_fetch_assoc( $res );
+          $items[] = mysqli_fetch_assoc( $res );
         }
-        mysql_free_result( $res );
+        mysqli_free_result( $res );
       }
 
       return $items;
@@ -90,7 +93,7 @@
     {
       Diagnostics::log( __( 'SQL: Получение последнего ID' ) );
       $startQueryTime = microtime( true );
-      $ID = mysql_insert_id( DB::getInstance() );
+      $ID = mysqli_insert_id( MySQLConnection::getInstance() );
       Diagnostics::log(
         'SQL: ' . sprintf( '%07.1fms', ( ( ( microtime( true ) - $startQueryTime ) * 10000 ) / 10 ) ) . 'ms' );
       return $ID;
@@ -102,7 +105,7 @@
       {
         if( mb_strtoupper( $param, 'UTF-8' ) != 'NULL' )
         {
-          $param = "'" . mysql_real_escape_string( $param, DB::getInstance() ) . "'";
+          $param = "'" . mysqli_real_escape_string( MySQLConnection::getInstance(), $param ) . "'";
         }
       }
     }
@@ -133,4 +136,15 @@
 
       return $status;
     }
+
+    final protected function kvGet()
+    {
+
+    }
+
+    final protected function kvSet()
+    {
+
+    }
   }
+
