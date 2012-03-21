@@ -16,7 +16,6 @@
   //Adminka config
   $appName = 'Adminka';
   $config[$appName]['domain'] = 'adminka.mb.trunk';
-
   $config[$appName]['prefix'] = 'http://';
   $config[$appName]['url'] = $config[$appName]['prefix'] . $config[$appName]['domain'];
   $config[$appName]['session_name'] = $config[$appName]['domain'];
@@ -26,4 +25,5 @@
 
   //session
   $config['session']['longTimeout'] = 31536000;
+
   $config['session']['shortTimeout'] = 14400;
