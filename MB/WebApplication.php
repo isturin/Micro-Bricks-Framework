@@ -4,8 +4,7 @@
 
   /**
    *
-   */
-  abstract class WebApplication extends Application
+   */ abstract class WebApplication extends Application
   {
     /**
      * @var string
@@ -49,14 +48,11 @@
       $brickName = '';
 
       $subDomainKey = $this->getSubdomainKey();
-      $authState = 'auth';  //todo: get from Session state
-      foreach( $this->map[$subDomainKey] AS $mask => $alias )
-      {
+      $authState = 'auth'; //todo: get from Session state
+      foreach( $this->map[$subDomainKey] AS $mask => $alias ){
         $maskParts = explode( ':', $mask, 2 );
-        if( $maskParts[0] == $authState OR $maskParts[0] = '*' )
-        {
-          if( preg_match( $maskParts[1], $_SERVER['REQUEST_URI'] ) )
-          {
+        if( $maskParts[0] == $authState OR $maskParts[0] = '*' ){
+          if( preg_match( $maskParts[1], $_SERVER['REQUEST_URI'] ) ){
             $aliasParts = explode( ':', $alias, 2 );
             $scheme = !empty( $aliasParts[1] ) ? $aliasParts[1] : $this->name;
             $brickName = $aliasParts[0];
@@ -67,12 +63,10 @@
 
       //get brick
       $this->brick = $this->getBrick( $this->name, $brickName );
-      if( !is_object( $this->brick ) )
-      {
+      if( !is_object( $this->brick ) ){
         $this->brick = $this->getBrick( 'MB', $brickName );
-        if( !is_object( $this->brick ) )
-        {
-          $this->error( 'brick' );//todo: set text or error type
+        if( !is_object( $this->brick ) ){
+          $this->error( 'brick' ); //todo: set text or error type
         }
       }
 
@@ -80,33 +74,27 @@
 
       //get action
       $this->action = $this->getAction( $this->name, $brickName, $actionName );
-      if( !is_object( $this->action ) )
-      {
+      if( !is_object( $this->action ) ){
         $this->brick = $this->getAction( 'MB', $brickName, $actionName );
-        if( !is_object( $this->action ) )
-        {
-          $this->error( 'action' );//todo: set text or error type
+        if( !is_object( $this->action ) ){
+          $this->error( 'action' ); //todo: set text or error type
         }
       }
 
-      if( !$this->action->applyFilters() )
-      {
-        return $this->error( 'filter' );//todo: set text or error type
+      if( !$this->action->applyFilters() ){
+        return $this->error( 'filter' ); //todo: set text or error type
       }
 
       // do ASYNC
       if( !empty( $_SERVER['REQUEST_METHOD'] ) AND !empty( $_SERVER['HTTP_X_REQUESTED_WITH'] ) AND
-        $_SERVER['REQUEST_METHOD'] == 'POST' AND $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest'
-      )
-      {
+                                                   $_SERVER['REQUEST_METHOD'] == 'POST' AND $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest'
+      ){
         //todo: async processing
       }
 
       // do POST
-      if( $_SERVER['REQUEST_METHOD'] == 'POST' )
-      {
-        if( !$this->action->post() )
-        {
+      if( $_SERVER['REQUEST_METHOD'] == 'POST' ){
+        if( !$this->action->post() ){
           //todo: post processing
         }
       }
@@ -122,12 +110,10 @@
     {
       $subdomain = substr( $_SERVER['HTTP_HOST'], 0, strrpos( $_SERVER['HTTP_HOST'], Config::get( $this->name, 'domain' ) ) );
 
-      if( strpos( $subdomain, 'www.' ) === 0 )
-      {
+      if( strpos( $subdomain, 'www.' ) === 0 ){
         $subdomain = substr( $subdomain, 4 );
       }
-      else if( $subdomain == 'www' )
-      {
+      else if( $subdomain == 'www' ){
         $subdomain == '';
       }
 
@@ -140,14 +126,11 @@
     private function getSubdomainKey()
     {
       $subDomainKey = 'root';
-      if( !empty( $this->subDomain ) )
-      {
-        if( isset( $this->map[$this->subDomain] ) )
-        {
+      if( !empty( $this->subDomain ) ){
+        if( isset( $this->map[$this->subDomain] ) ){
           $subDomainKey = $this->subDomain;
         }
-        else
-        {
+        else{
           $subDomainKey = '*';
         }
       }
@@ -162,19 +145,15 @@
     private function drawSchema( $scheme, $actionContent )
     {
       $path = "../{$this->name}/schemes/{$scheme}.php";
-      if( file_exists( $path ) )
-      {
+      if( file_exists( $path ) ){
         require $path;
       }
-      else
-      {
+      else{
         $path = "../MB/schemes/{$scheme}.php";
-        if( file_exists( $path ) )
-        {
+        if( file_exists( $path ) ){
           require $path;
         }
-        else
-        {
+        else{
           $this->error( 'scheme' );
         }
       }
@@ -186,6 +165,5 @@
       Diagnostics::showLog( DIAGNOSTICS_LOG_MODE_HTML );
       return parent::error( $text );
     }
-
   }
 
